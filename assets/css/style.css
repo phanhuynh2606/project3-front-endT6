@@ -4,6 +4,17 @@
    flex-wrap: wrap;
 }
 
+h1 {
+   background: #57fe73b2;
+   text-align: center;
+   width: 70%;
+   margin: 10px auto 20px;
+}
+
+h2 {
+   font-size: 32px;
+}
+
 .inner-category {
    padding: 15px;
    background: #FEC257;
@@ -54,12 +65,19 @@
    border-radius: 5px;
    overflow: hidden;
    box-shadow: 1px 1px 6px rgba(35, 35, 35, 0.661);
+   transition: all 0.3s;
+}
+
+#list-products .inner-product:hover {
+   /* transform: scale3d(1.1, 1.1, 1); */
+   transform: scale(1.1);
 }
 
 #list-products .inner-product img {
    width: 100%;
    aspect-ratio: 4/3;
    object-fit: cover;
+   object-position: center;
 }
 
 #list-products .inner-product .inner-desc {

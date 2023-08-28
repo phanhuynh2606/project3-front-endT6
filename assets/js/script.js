@@ -52,7 +52,7 @@ const display = (API) => {
     if (productHtml.length != 0) {
       listProducts.innerHTML = productHtml.join("");
     } else {
-      listProducts.innerHTML = "<h1>Không có sản phẩm</h1>";
+      listProducts.innerHTML = "<h2>Không có sản phẩm</h2>";
     }
     currentElement.innerHTML = currentPage;
   });
