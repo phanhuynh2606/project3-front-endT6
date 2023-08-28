@@ -1,7 +1,7 @@
 {
   "name": "project-mini3",
   "version": "1.0.0",
-  "description": "",
+  "description": "��#\u0000 \u0000p\u0000r\u0000o\u0000j\u0000e\u0000c\u0000t\u00003\u0000-\u0000f\u0000r\u0000o\u0000n\u0000t\u0000-\u0000e\u0000n\u0000d\u0000T\u00006\u0000\r\u0000 \u0000",
   "main": "index.js",
   "scripts": {
     "start": "json-server --watch database.json",
@@ -15,5 +15,11 @@
   "license": "ISC",
   "dependencies": {
     "json-server": "^0.17.3"
-  }
+  },
+  "bugs": {
+    "url": "https://github.com/phanhuynh2606/project3-front-endT6/issues"
+  },
+  "homepage": "https://github.com/phanhuynh2606/project3-front-endT6#readme",
+  "devDependencies": {},
+  "keywords": []
 }
