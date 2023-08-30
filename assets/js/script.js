@@ -3,6 +3,8 @@ const fetchAPI = async (API) => {
   const data = await res.json();
   return data;
 };
+
+const url = "https://json-server-vercel-data.vercel.app/products";
 // Pagination
 const currentElement = document.querySelector("#pageCurrent");
 const prevButton = document.querySelector("#prev");
@@ -14,7 +16,8 @@ const sort = document.querySelector("#sort");
 var currentPage = 1;
 var totalProducts = 0;
 const itemsPerPage = 4;
-var cate;
+var cate = "";
+var textURI = "";
 const getTotalProducts = async (API) => {
   const res = await fetch(API);
   const data = await res.json();
@@ -27,7 +30,7 @@ const getTotalProducts = async (API) => {
     disablePrevAndNext(true, true);
   }
 };
-getTotalProducts("http://localhost:3000/products");
+getTotalProducts(`${url}`);
 
 const disablePrevAndNext = (prev, next) => {
   prevButton.disabled = prev;
@@ -64,10 +67,15 @@ const display = (API) => {
   }
 };
 // Start
-display(`http://localhost:3000/products?_page=${currentPage}&_limit=${itemsPerPage}`);
-
+// display(`${url}?_page=${currentPage}&_limit=${itemsPerPage}`);
+const displayAllproduct = () => {
+  currentPage = 1;
+  display(`${url}?_page=${currentPage}&_limit=${itemsPerPage}`);
+  getTotalProducts(`${url}`);
+  document.querySelector("#all-products").classList.add("active");
+};
 var ListCate = document.querySelector("#listCategory");
-fetchAPI("http://localhost:3000/db")
+fetchAPI("https://json-server-vercel-data.vercel.app/db")
   .then((data) => {
     const cate = document.createElement("div");
     const htmls = data.category.map((item) => {
@@ -75,49 +83,50 @@ fetchAPI("http://localhost:3000/db")
     <div class="inner-category">${item}</div>
     `;
     });
+    htmls.unshift(`<div class="inner-category" id = "all-products">All</div>`);
     ListCate.innerHTML = htmls.join("");
     return data;
   })
   .then((dataProduct) => {
     const selectCate = ListCate.querySelectorAll(".inner-category");
+    displayAllproduct();
     selectCate.forEach((item) => {
       item.addEventListener("click", (e) => {
-        getTotalProducts(`http://localhost:3000/products?category=${e.target.innerHTML}`);
         currentPage = 1;
-        currentElement.innerHTML = currentPage;
-        selectCate.forEach((button) => {
-          button.classList.remove("active");
-          // set lại giá trị tìm kiếm vào sort
-          Valuesearch.value = "";
-          sort.selectedIndex = 0;
-        });
-        item.classList.add("active");
-        cate = `category=${e.target.innerHTML}&`;
-        display(
-          `http://localhost:3000/products?category=${e.target.innerHTML}&_page=${currentPage}&_limit=${itemsPerPage}`
-        );
+        if (e.target.innerHTML == "All") {
+          displayAllproduct();
+        } else {
+          getTotalProducts(`${url}?category=${e.target.innerHTML}`);
+          currentElement.innerHTML = currentPage;
+          selectCate.forEach((button) => {
+            button.classList.remove("active");
+            // set lại giá trị tìm kiếm vào sort
+          });
+          item.classList.add("active");
+          cate = `category=${e.target.innerHTML}&`;
+          textURI = `category=${e.target.innerHTML}`;
+          display(`${url}?category=${e.target.innerHTML}&_page=${currentPage}&_limit=${itemsPerPage}`);
 
-        disablePrevAndNext(true, false);
-
-        // Sắp xếp khi chọn category----------
-        sort.addEventListener("change", (event) => {
           disablePrevAndNext(true, false);
-          currentPage = 1;
-          display(
-            `http://localhost:3000/products?category=${e.target.innerHTML}&_sort=${event.target.value}&_page=${currentPage}&_limit=${itemsPerPage}`
-          );
-          cate = `category=${e.target.innerHTML}&_sort=${event.target.value}&`;
-        });
+        }
+        Valuesearch.value = "";
+        sort.selectedIndex = 0;
       });
     });
   });
 
 // Sắp xếp
-sort.addEventListener("change", (e) => {
+const displaySort = (urlSort) => {
   currentPage = 1;
-  display(`http://localhost:3000/products?_page=${currentPage}&_limit=${itemsPerPage}&_sort=${e.target.value}`);
-  cate = `_sort=${e.target.value}&`;
+  display(`${url}?${cate}${urlSort}&_page=${currentPage}&_limit=${itemsPerPage}`);
   disablePrevAndNext(true, false);
+  textURI = `${cate}${urlSort}`;
+};
+
+sort.addEventListener("change", (e) => {
+  textURI = cate;
+  const txtSearch = `_sort=${e.target.value}`;
+  displaySort(txtSearch);
 });
 
 // Tìm kiếm
@@ -125,6 +134,7 @@ const Valuesearch = document.querySelector("#search");
 const btnSearch = document.querySelector("#btnSearch");
 btnSearch.addEventListener("click", (e) => {
   // Xóa active ở category
+
   const selectCate = ListCate.querySelectorAll(".inner-category");
   selectCate.forEach((button) => {
     button.classList.remove("active");
@@ -134,17 +144,10 @@ btnSearch.addEventListener("click", (e) => {
   var textSearch = Valuesearch.value;
   disablePrevAndNext(true, false);
 
-  getTotalProducts(`http://localhost:3000/products?title_like=${Valuesearch.value}`);
-  display(`http://localhost:3000/products?title_like=${Valuesearch.value}&page=${currentPage}&_limit=${itemsPerPage}`);
-  cate = `title_like=${Valuesearch.value}&`;
-
-  sort.addEventListener("change", (event) => {
-    disablePrevAndNext(true, false);
-    display(
-      `http://localhost:3000/products?title_like=${Valuesearch.value}&_sort=${event.target.value}&page=${currentPage}&_limit=${itemsPerPage}`
-    );
-    cate = `title_like=${Valuesearch.value}&_sort=${event.target.value}&`;
-  });
+  getTotalProducts(`${url}?title_like=${textSearch}`);
+  display(`${url}?title_like=${textSearch}&_page=${currentPage}&_limit=${itemsPerPage}`);
+  cate = `title_like=${textSearch}&`;
+  textURI = `title_like=${textSearch}`;
 });
 
 // prevPage
@@ -152,7 +155,7 @@ const prevPage = (category = "", currentPage = 1) => {
   if (currentPage == 1) {
     prevButton.disabled = true;
   }
-  display(`http://localhost:3000/products?${category}_page=${currentPage}&_limit=${itemsPerPage}`);
+  display(`${url}?${category}&_page=${currentPage}&_limit=${itemsPerPage}`);
   currentElement.innerHTML = currentPage;
 };
 
@@ -164,7 +167,7 @@ const nextPage = (total, category, currentPage = 1) => {
   if (currentPage === endPage) {
     nextButton.disabled = true;
   }
-  display(`http://localhost:3000/products?${category}_page=${currentPage}&_limit=${itemsPerPage}`);
+  display(`${url}?${category}&_page=${currentPage}&_limit=${itemsPerPage}`);
   currentElement.innerHTML = currentPage;
 };
 
@@ -172,11 +175,11 @@ const nextPage = (total, category, currentPage = 1) => {
 prevButton.addEventListener("click", () => {
   nextButton.disabled = false;
   currentPage--;
-  prevPage(cate || "", currentPage);
+  prevPage(textURI || "", currentPage);
 });
 
 nextButton.addEventListener("click", () => {
   prevButton.disabled = false;
   currentPage++;
-  nextPage(totalProducts, cate || "", currentPage);
+  nextPage(totalProducts, textURI || "", currentPage);
 });
