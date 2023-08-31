@@ -94,13 +94,17 @@ fetchAPI("https://json-server-vercel-data.vercel.app/db")
       item.addEventListener("click", (e) => {
         currentPage = 1;
         if (e.target.innerHTML == "All") {
+          selectCate.forEach((button) => {
+            button.classList.remove("active");
+            // set lại giá trị tìm kiếm vào sort
+          });
           displayAllproduct();
+          textURI = url;
         } else {
           getTotalProducts(`${url}?category=${e.target.innerHTML}`);
           currentElement.innerHTML = currentPage;
           selectCate.forEach((button) => {
             button.classList.remove("active");
-            // set lại giá trị tìm kiếm vào sort
           });
           item.classList.add("active");
           cate = `category=${e.target.innerHTML}&`;
