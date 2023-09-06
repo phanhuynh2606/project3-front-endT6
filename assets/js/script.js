@@ -41,15 +41,21 @@ const display = (API) => {
   fetchAPI(API).then((dataProduct) => {
     listProducts.innerHTML = "";
     const productHtml = dataProduct.map((item) => {
+      const sales = Math.ceil(item.discountPercentage);
+      const priceOld = Math.ceil((sales + 100) / 100) * item.price;
       return `
       <div class="inner-product">
-      <img src="${item.thumbnail}">
-      <div class= "inner-desc">
-      <div class="inner-name">${item.title}</div>
-      <div class="inner-price">${item.price}$</div>
-                   <div class="inner-stock">Còn lại: ${item.stock} sp</div>
-               </div>
+          <img src="${item.thumbnail}">
+          <div class= "inner-desc">
+            <div class="inner-name">${item.title}</div>
+            <div class="inner-price">
+            <span>Old Price: <del>${priceOld}$</del></span>
+            New Price:<p>${item.price}$</p>
             </div>
+            <div class="inner-stock">Còn lại: ${item.stock} sp</div>
+          </div>
+          <div class= "inner-sales">${Math.ceil(item.discountPercentage)}%</div>
+        </div>
             `;
     });
     if (productHtml.length != 0) {

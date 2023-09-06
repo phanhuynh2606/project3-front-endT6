@@ -65,10 +65,30 @@ h2 {
    border-radius: 5px;
    overflow: hidden;
    box-shadow: 1px 1px 6px rgba(35, 35, 35, 0.661);
-   transition: all 0.3s;
+   position: relative;
+   cursor: pointer;
 }
 
-#list-products .inner-product:hover {
+#list-products .inner-product .inner-sales {
+   background: #f2101095;
+   display: flex;
+   align-items: center;
+   justify-content: center;
+   color: #fff;
+   width: 90px;
+   height: 90px;
+   position: absolute;
+   right: -15px;
+   top: -15px;
+   font-size: 26px;
+   clip-path: polygon(50% 0%, 83% 12%, 100% 43%, 94% 78%, 68% 100%, 32% 100%, 6% 78%, 0% 43%, 17% 12%);
+}
+
+#list-products .inner-product:hover img {
+   transition: all 0.3s linear;
+}
+
+#list-products .inner-product:hover img {
    /* transform: scale3d(1.1, 1.1, 1); */
    transform: scale(1.1);
 }
@@ -93,9 +113,21 @@ h2 {
 }
 
 #list-products .inner-desc .inner-price {
-   color: rgba(255, 0, 0, 0.743);
+   color: #000;
    font-weight: 700;
    font-size: 20px;
+}
+
+#list-products .inner-desc .inner-price span {
+   display: block;
+   color: #000;
+   font-size: 16px;
+   font-style: italic;
+}
+
+#list-products .inner-desc .inner-price p {
+   display: inline;
+   color: red;
 }
 
 #pagination {
@@ -110,11 +142,18 @@ h2 {
 #pagination button {
    background: #ec9f1a;
    border: none;
-   padding: 5px 10px;
+   padding: 10px 10px;
    text-align: center;
    border-radius: 10px;
    cursor: pointer;
+   transition: all 0.3s;
 }
+
+#pagination button:hover {
+   border-radius: 20px 0 20px 0;
+   background: rgba(0, 217, 255, 0.817);
+}
+
 
 #pagination button.limit {
    background: #ec9f1a65;
